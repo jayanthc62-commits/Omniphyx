@@ -1,0 +1,13 @@
+node_modules/
+**/node_modules/
+.gradle/
+**/.gradle/
+**/build/
+**/.idea/
+*.iml
+*.log
+.env
+.DS_Store
+android/local.properties
+android-sdk/
+freetube-source/FreeTube-development.zip
