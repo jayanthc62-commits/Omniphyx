@@ -1,0 +1,76 @@
+name: Build FreeTube Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Omniphyx
+        uses: actions/checkout@v4
+
+      - name: Clone FreeTubeAndroid source
+        run: |
+          rm -rf FreeTubeAndroid
+          git clone --depth 1 --branch development \
+            https://github.com/MarmadileManteater/FreeTubeAndroid.git \
+            FreeTubeAndroid
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack install --global pnpm@12.3.4
+          pnpm --version
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install required Android packages
+        run: |
+          sdkmanager "platform-tools" \
+                     "platforms;android-34" \
+                     "build-tools;34.0.0"
+
+      - name: Install JavaScript dependencies
+        working-directory: FreeTubeAndroid
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare Android assets
+        working-directory: FreeTubeAndroid
+        run: |
+          pnpm run pack:android
+          pnpm run pack:botGuardScript:android
+
+      - name: Build debug APK
+        working-directory: FreeTubeAndroid/android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon --max-workers=2 assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FreeTubeAndroid-debug
+          path: FreeTubeAndroid/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
