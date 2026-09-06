@@ -11,3 +11,14 @@ node_modules/
 android/local.properties
 android-sdk/
 freetube-source/FreeTube-development.zip
+
+node_modules/
+**/node_modules/
+.gradle/
+**/.gradle/
+**/build/
+**/.idea/
+*.iml
+.env
+android/local.properties
+android-sdk/
