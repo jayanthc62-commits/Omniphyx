@@ -117,6 +117,13 @@ export default function App() {
     ];
   });
 
+  // Dismiss Android native splash screen once React is mounted
+  useEffect(() => {
+    try {
+      (window as any).Android?.hideSplashScreen?.();
+    } catch (e) {}
+  }, []);
+
   // Save history to localStorage
   useEffect(() => {
     try {
