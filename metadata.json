@@ -1,0 +1,6 @@
+{
+  "name": "FreeTube",
+  "description": "Modern, privacy-focused video client with responsive mobile playback, cross-channel episode availability intelligence, and Vintora liquid glass AI agent with dynamic Gemini model routing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
